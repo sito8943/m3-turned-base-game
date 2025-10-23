@@ -33,7 +33,7 @@
 - **Build:** `npm run build`
 - **Start (after build):** `npm start`
 
-Requires Node 18+.
+Requires Node 20+.
 
 **Project Structure**
 
