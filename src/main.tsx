@@ -1,4 +1,4 @@
-import { render } from "ink";
+import { withFullScreen } from "fullscreen-ink";
 import { App } from "./App";
 
-render(<App />);
+withFullScreen(<App />).start();
