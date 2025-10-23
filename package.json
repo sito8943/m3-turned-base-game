@@ -4,12 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "play": "npm run build; npm run start",
     "start": "node ./dist/main.js",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "lint": "eslint ."
   },
   "dependencies": {
     "fullscreen-ink": "^0.1.0",
