@@ -1,73 +1,50 @@
-# React + TypeScript + Vite
+**Current Version**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- 1.0.0
 
-Currently, two official plugins are available:
+**Mechanics**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Choose Class:** Pick Warrior, Mage, or Hunter in `src/views/Home.tsx`.
+- **Turn Order:** Compares `player agility` vs `enemy speed`. Higher acts first; tie favors the player.
+- **Actions:**
+  - **Attack:** Deals class-based damage; if the foe survives, it attacks back.
+  - **Run:** Succeeds when `agility >= enemy.speed`; otherwise it is impossible and the enemy attacks.
+- **Leveling:** Gain EXP from wins; at `100` EXP you level up and select an attribute in `src/sections/LevelUp.tsx`.
+- **On Defeat:** Shows a summary screen in `src/sections/GameOver.tsx`.
 
-## React Compiler
+**Stats And Enemies**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Player Stats:** See `src/lib/types.ts`
+  - `strength`: Physical damage source; +8 life per point when chosen on level up.
+  - `intelligence`: Magical damage source; +8 mana per point when chosen on level up.
+  - `agility`: Turn order (player speed).
+  - `life`: Hit points.
+  - `mana`: Resource for spells (future use).
+- **Damage Model:** `Mage => intelligence - enemy.magicResistant`, others => `strength - enemy.physicalResistant`.
+- **Enemies:** Defined in `src/data/enemies.ts`. Key fields:
+  - `attack`, `life`, `speed`, optional `magicResistant`, `physicalResistant`, `givenExp`.
+  - Enemies are tiered and selected with level-aware weights via `getRandomEnemy(playerLevel)`; higher levels see stronger enemies more often.
 
-## Expanding the ESLint configuration
+**How To Run**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Install:** `npm install`
+- **Play (build + run):** `npm run play`
+- **Dev (fast rebuilds):** `npm run dev`
+- **Build:** `npm run build`
+- **Start (after build):** `npm start`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Requires Node 18+.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Project Structure**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `src/main.tsx`: App entry; renders the Ink app.
+- `src/App.tsx`: Handles class selection vs fight screen.
+- `src/views/Home.tsx`: Class selection UI.
+- `src/views/Fight.tsx`: HUD, leveling, and combat orchestration.
+- `src/sections/Combat.tsx`: Turn logic, actions (Attack/Run) and messaging.
+- `src/sections/LevelUp.tsx`: Attribute choice at level up.
+- `src/sections/GameOver.tsx`: Defeat summary.
+- `src/data/enemies.ts`: Enemy definitions and level-aware selection.
+- `src/data/stats.ts`: Base stats per class (balanced presets).
+- `src/data/attributes.ts`: Attribute options for level up.
+- `src/lib/types.ts`: Shared types: `Class`, `Stats`, `Enemy`, `UserAction`.
