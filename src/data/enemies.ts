@@ -9,6 +9,21 @@ export const enemies: Enemy[] = [
     givenExp: 25,
   },
   {
+    name: "🟢 Slime",
+    attack: 1,
+    life: 6,
+    speed: 1,
+    magicResistant: 2,
+    givenExp: 20,
+  },
+  {
+    name: "🗡️ Bandit",
+    attack: 2,
+    life: 5,
+    speed: 3,
+    givenExp: 28,
+  },
+  {
     name: "🐺 Dire wolf",
     attack: 2,
     life: 4,
@@ -48,6 +63,38 @@ export const enemies: Enemy[] = [
     givenExp: 70,
     physicalResistant: 2,
   },
+  {
+    name: "🧟 Zombie",
+    attack: 2,
+    life: 12,
+    speed: 1,
+    physicalResistant: 1,
+    givenExp: 45,
+  },
+  {
+    name: "👹 Ghoul",
+    attack: 3,
+    life: 10,
+    speed: 2,
+    magicResistant: 1,
+    givenExp: 55,
+  },
+  {
+    name: "🛡️ Knight",
+    attack: 4,
+    life: 14,
+    speed: 2,
+    physicalResistant: 3,
+    givenExp: 90,
+  },
+  {
+    name: "🧙‍♂️ Warlock",
+    attack: 5,
+    life: 10,
+    speed: 3,
+    magicResistant: 3,
+    givenExp: 95,
+  },
 ];
 
 // Weights are computed dynamically based on player level (see getRandomEnemy)
@@ -55,13 +102,19 @@ export const enemies: Enemy[] = [
 function getTier(name: string): number {
   switch (name) {
     case "👺 Goblin":
+    case "🟢 Slime":
+    case "🗡️ Bandit":
     case "🐺 Dire wolf":
       return 1;
     case "💀 🔪 Skeleton":
+    case "🧟 Zombie":
+    case "👹 Ghoul":
       return 2;
     case "👺 🪓 Orc":
     case "🐺 Giant Wolf":
     case "💀 🏹 Skeleton Archer":
+    case "🛡️ Knight":
+    case "🧙‍♂️ Warlock":
       return 3;
     default:
       return 1;

@@ -1,26 +1,26 @@
 import { Class, type Stats } from "../lib/types";
 
 export const warriorStats: Stats = {
-  strength: 2,
+  strength: 3,
   intelligence: 0,
   agility: 1,
-  life: 26,
+  life: 28,
   mana: 0,
 };
 
 export const mageStats: Stats = {
   strength: 0,
   intelligence: 3,
-  agility: 0,
-  life: 10,
+  agility: 1,
+  life: 14,
   mana: 24,
 };
 
 export const hunterStats: Stats = {
-  strength: 1,
+  strength: 3,
   intelligence: 1,
-  agility: 2,
-  life: 18,
+  agility: 3,
+  life: 20,
   mana: 8,
 };
 
