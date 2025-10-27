@@ -3,11 +3,9 @@ import BigText from "ink-big-text";
 import type { FightPropsType } from "./types";
 import { Class, type Enemy, type Stats } from "../lib/types";
 import { useCallback, useMemo, useState } from "react";
-import LevelUp from "../sections/LevelUp";
-import { BaseStats } from "../data/stats";
+import { BaseStats } from "../data";
 import type { Item } from "../../node_modules/ink-select-input/build/SelectInput";
-import Combat from "../sections/Combat";
-import GameOver from "../sections/GameOver";
+import { GameOver, Combat, LevelUp } from "../sections";
 
 function Fight(props: FightPropsType) {
   const { userClass } = props;

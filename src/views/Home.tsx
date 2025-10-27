@@ -2,7 +2,7 @@ import Gradient from "ink-gradient";
 import { Box, Text } from "ink";
 import BigText from "ink-big-text";
 import SelectInput from "ink-select-input";
-import { classes } from "../data/classes";
+import { classes } from "../data";
 import type { HomePropsType } from "./types";
 
 function Home(props: HomePropsType) {

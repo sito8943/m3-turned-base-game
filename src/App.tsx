@@ -2,8 +2,7 @@ import type { Item } from "../node_modules/ink-select-input/build/SelectInput";
 import { Class } from "./lib/types";
 
 import { useState } from "react";
-import Home from "./views/Home";
-import Fight from "./views/Fight";
+import { Fight, Home } from "./views";
 
 export const App = () => {
   const [userClass, setUserClass] = useState<Class>();

@@ -1,5 +1,5 @@
 import type { CombatPropsType } from "./types";
-import { getRandomEnemy } from "../data/enemies";
+import { getRandomEnemy } from "../data/";
 import { useCallback, useEffect, useState } from "react";
 import { Box, Text } from "ink";
 import { UserAction } from "../lib/types";
@@ -206,7 +206,16 @@ function Combat(props: CombatPropsType) {
         )}
       </Box>
     );
-  }, [damage, enemy?.attack, enemy?.life, enemy?.name, enemyPlaying, onActionSelect, playerLife, runStatus]);
+  }, [
+    damage,
+    enemy?.attack,
+    enemy?.life,
+    enemy?.name,
+    enemyPlaying,
+    onActionSelect,
+    playerLife,
+    runStatus,
+  ]);
 
   return (
     <Box width="100%" display="flex" flexDirection="column">
