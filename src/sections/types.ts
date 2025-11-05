@@ -1,5 +1,6 @@
 import type { Item } from "../../node_modules/ink-select-input/build/SelectInput";
-import type { Class, Enemy, Stats } from "../lib/types";
+import type { Enemy, Stats } from "../lib/types";
+import { Class } from "../lib/enums";
 
 export type LevelPropsType = {
   onAttributeSelect: (attribute: Item<keyof Stats>) => void;
@@ -17,5 +18,5 @@ export type GameOverPropsType = {
   userClass: Class;
   level: number;
   defeater: Enemy;
-  combats:number
+  combats: number;
 };

@@ -2,11 +2,11 @@ import type { CombatPropsType } from "./types";
 import { getRandomEnemy } from "../data/";
 import { useCallback, useEffect, useState } from "react";
 import { Box, Text } from "ink";
-import { UserAction } from "../lib/types";
+import { UserAction } from "../lib/enums";
 import type { Enemy } from "../lib/types";
 import SelectInput from "ink-select-input";
 import type { Item } from "../../node_modules/ink-select-input/build/SelectInput";
-import { calculateDamage } from "./utils";
+import { attemptRun, resolveCombatRound } from "../core";
 
 const playerActions: Item<UserAction>[] = [
   {
@@ -51,19 +51,22 @@ function Combat(props: CombatPropsType) {
     async (action: Item<UserAction>) => {
       if (!enemy) return;
       if (action.value === UserAction.Run) {
-        const enemyDamage = enemy.attack ?? 0;
-        if (enemy.speed > playerStats.agility) {
-          // Run is impossible when enemy is faster
+        const res = attemptRun({
+          playerAgility: playerStats.agility,
+          enemySpeed: enemy.speed,
+          enemyAttack: enemy.attack,
+        });
+        if (res.outcome === "impossible") {
           setRunStatus("impossible");
           await delay(1500);
           setRunStatus("idle");
-          // Enemy punishes the attempt
-          setEnemyPlaying(true);
-          setPlayerLife((prev) => prev - enemyDamage);
-          await delay(2000);
-          setEnemyPlaying(false);
+          if (res.retaliationDamage > 0) {
+            setEnemyPlaying(true);
+            setPlayerLife((prev) => prev - res.retaliationDamage);
+            await delay(2000);
+            setEnemyPlaying(false);
+          }
         } else {
-          // Escape succeeds when player is at least as fast
           setRunStatus("success");
           await delay(1500);
           setRunStatus("idle");
@@ -73,21 +76,25 @@ function Combat(props: CombatPropsType) {
         return;
       }
 
-      const hit = calculateDamage(playerStats, userClass, enemy);
-      const enemyDamage = enemy.attack ?? 0;
-      const remainingEnemyLife = enemy.life - hit;
-      const remainingPlayerLife = playerLife - enemyDamage;
+      const outcome = resolveCombatRound({
+        playerStats,
+        userClass,
+        enemy,
+        playerLife,
+      });
 
       const enemyAttack = async () => {
         setEnemyPlaying(true);
-        setPlayerLife((prev) => prev - enemyDamage);
+        setPlayerLife((prev) => prev - outcome.enemyDamage);
         await delay(2000);
         setEnemyPlaying(false);
       };
 
       const playerAttack = async () => {
-        setDamage(hit);
-        setEnemy((prev) => (prev ? { ...prev, life: prev.life - hit } : prev));
+        setDamage(outcome.playerDamage);
+        setEnemy((prev) =>
+          prev ? { ...prev, life: prev.life - outcome.playerDamage } : prev
+        );
         await delay(2000);
         setDamage(undefined);
       };
@@ -100,31 +107,18 @@ function Combat(props: CombatPropsType) {
         setDefeated(false);
       };
 
-      const battleSequence = async () => {
-        if (enemy.speed >= playerStats.agility) {
+      for (const step of outcome.order) {
+        if (step === "enemy") {
           await enemyAttack();
-          if (remainingPlayerLife <= 0) return;
-
-          await playerAttack();
-          if (remainingEnemyLife <= 0) {
-            await handleVictory();
-            return;
-          }
-
-          if (remainingPlayerLife <= 0) return;
+          if (outcome.playerLifeAfter <= 0) return;
         } else {
           await playerAttack();
-          if (remainingEnemyLife <= 0) {
+          if (outcome.victory) {
             await handleVictory();
             return;
           }
-
-          await enemyAttack();
-          if (remainingPlayerLife <= 0) return;
         }
-      };
-
-      await battleSequence();
+      }
     },
     [enemy, onCombatWon, playerLife, playerStats, userClass]
   );

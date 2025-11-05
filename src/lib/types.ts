@@ -1,9 +1,3 @@
-export enum Class {
-  Warrior = 1,
-  Mage,
-  Hunter,
-}
-
 export type Stats = {
   strength: number; // 8 of life each and + 1 physical atk
   intelligence: number; // 8 of mana each and + 1 spell atk
@@ -21,8 +15,3 @@ export type Enemy = {
   magicResistant?: number;
   physicalResistant?: number;
 };
-
-export enum UserAction {
-  Attack = 1,
-  Run = 2,
-}

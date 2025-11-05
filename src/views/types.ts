@@ -1,4 +1,4 @@
-import { Class } from "../lib/types";
+import { Class } from "../lib/enums";
 import type { Item } from "../../node_modules/ink-select-input/build/SelectInput";
 
 export type HomePropsType = {

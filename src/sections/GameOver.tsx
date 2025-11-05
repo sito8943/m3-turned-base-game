@@ -1,7 +1,7 @@
 import { Box, Text } from "ink";
 import BigText from "ink-big-text";
 import type { GameOverPropsType } from "./types";
-import { Class } from "../lib/types";
+import { Class } from "../lib/enums";
 
 function GameOver(props: GameOverPropsType) {
   const { userClass, level, combats, defeater } = props;

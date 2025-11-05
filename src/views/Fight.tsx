@@ -1,9 +1,11 @@
 import { Box, Text } from "ink";
 import BigText from "ink-big-text";
 import type { FightPropsType } from "./types";
-import { Class, type Enemy, type Stats } from "../lib/types";
+import type { Enemy, Stats } from "../lib/types";
+import { Class } from "../lib/enums";
 import { useCallback, useMemo, useState } from "react";
 import { BaseStats } from "../data";
+import { LEVEL_UP_EXP, applyAttributeIncrease, computeExpGain } from "../core";
 import type { Item } from "../../node_modules/ink-select-input/build/SelectInput";
 import { GameOver, Combat, LevelUp } from "../sections";
 
@@ -18,15 +20,9 @@ function Fight(props: FightPropsType) {
 
   const onAttributeSelect = useCallback(
     (attribute: Item<keyof Stats>) => {
-      const newStats = { ...stats };
-      newStats[attribute.value]++;
-      if (attribute.value === "strength") {
-        newStats.life += 8;
-      } else if (attribute.value === "intelligence") {
-        newStats.mana += 8;
-      }
+      const newStats = applyAttributeIncrease(stats, attribute.value);
       setStats(newStats);
-      setExp((prev) => prev - 100);
+      setExp((prev) => prev - LEVEL_UP_EXP);
       setLevel(level + 1);
     },
     [level, stats]
@@ -35,7 +31,7 @@ function Fight(props: FightPropsType) {
   const onCombatWon = useCallback(
     (expGained: number) => {
       setCombats((prev) => prev + 1);
-      setExp((prev) => prev + Math.floor(expGained / level));
+      setExp((prev) => prev + computeExpGain(expGained, level));
     },
     [level]
   );
@@ -45,7 +41,7 @@ function Fight(props: FightPropsType) {
   }, []);
 
   const render = useMemo(() => {
-    if (exp >= 100) {
+    if (exp >= LEVEL_UP_EXP) {
       return <LevelUp onAttributeSelect={onAttributeSelect} />;
     } else {
       return (
@@ -83,7 +79,8 @@ function Fight(props: FightPropsType) {
           >
             <Box width="100%" display="flex" justifyContent="space-between">
               <Text>
-                Level: {level}. Exp: {exp} / 100 {String(Class[userClass])}
+                Level: {level}. Exp: {exp} / {LEVEL_UP_EXP}{" "}
+                {String(Class[userClass])}
               </Text>
               <Text>Combats: {combats}</Text>
             </Box>
